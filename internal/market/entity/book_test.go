@@ -3,6 +3,8 @@ package entity
 import (
 	"sync"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBuyAsset(t *testing.T) {
