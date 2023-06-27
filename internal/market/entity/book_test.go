@@ -23,12 +23,12 @@ func TestBuyAsset(t *testing.T) {
 	book := NewBook(orderChan, orderChanOut, &wg)
 	go book.Trade()
 
-	//Add buy order
+	// add buy order
 	wg.Add(1)
 	order := NewOrder("1", investor, asset1, 5, 5, "SELL")
 	orderChan <- order
 
-	//Add sell order
+	// add sell order
 
 	order2 := NewOrder("2", investor2, asset1, 5, 5, "BUY")
 	orderChan <- order2
@@ -77,7 +77,7 @@ func TestBuyAssetWithDifferentAssents(t *testing.T) {
 	assert.Equal(5, order2.PendingShares, "Order 2 should have 5 PendingShares")
 }
 
-func TestBuyPartialAsset(t *testing.T){
+func TestBuyPartialAsset(t *testing.T) {
 	asset1 := NewAsset("asset1", "Asset 1", 100)
 
 	investor := NewInvestor("1")
@@ -87,8 +87,8 @@ func TestBuyPartialAsset(t *testing.T){
 	investorAssetPosition := NewInvestorAssetPosition("asset1", 3)
 	investor.AddAssetPosition(investorAssetPosition)
 
-	investorAssetPosition2 := NewInvestorAssetPosition("asset2", 5)
-	investor.AddAssetPosition(investorAssetPosition2)
+	investorAssetPosition2 := NewInvestorAssetPosition("asset1", 5)
+	investor3.AddAssetPosition(investorAssetPosition2)
 
 	wg := sync.WaitGroup{}
 	orderChan := make(chan *Order)
@@ -98,11 +98,11 @@ func TestBuyPartialAsset(t *testing.T){
 	go book.Trade()
 
 	wg.Add(1)
-	//investor 2 wants to buy 5 shares
+	// investor 2 wants to buy 5 shares
 	order2 := NewOrder("1", investor2, asset1, 5, 5.0, "BUY")
 	orderChan <- order2
 
-	//investor 1 wants to sell 3 shares
+	// investidor 1 wants to sell 3 shares
 	order := NewOrder("2", investor, asset1, 3, 5.0, "SELL")
 	orderChan <- order
 
@@ -155,6 +155,7 @@ func TestBuyWithDifferentPrice(t *testing.T) {
 
 	wg := sync.WaitGroup{}
 	orderChan := make(chan *Order)
+
 	orderChanOut := make(chan *Order)
 
 	book := NewBook(orderChan, orderChanOut, &wg)
@@ -165,12 +166,12 @@ func TestBuyWithDifferentPrice(t *testing.T) {
 	order2 := NewOrder("2", investor2, asset1, 5, 5.0, "BUY")
 	orderChan <- order2
 
-	// investor 1 wants to buy 3 shares
+	// investor 1 wants to sell 3 shares
 	order := NewOrder("1", investor, asset1, 3, 4.0, "SELL")
 	orderChan <- order
 
 	go func() {
-		for range orderChanOut{
+		for range orderChanOut {
 		}
 	}()
 	wg.Wait()
@@ -220,11 +221,11 @@ func TestNoMatch(t *testing.T) {
 	go book.Trade()
 
 	wg.Add(0)
-	// investidor 1 wants to sell 3 shares
+	// investor 1 wants to sell 3 shares
 	order := NewOrder("1", investor, asset1, 3, 6.0, "SELL")
 	orderChan <- order
 
-	// investidor 2 wants to buy 5 shares
+	// investor 2 wants to buy 5 shares
 	order2 := NewOrder("2", investor2, asset1, 5, 5.0, "BUY")
 	orderChan <- order2
 
